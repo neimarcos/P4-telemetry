@@ -15,8 +15,9 @@ const bit<16> TYPE_PROBE = 0x812;
 typedef bit<9>  egressSpec_t;
 typedef bit<48> macAddr_t;
 typedef bit<32> ip4Addr_t;
-
 typedef bit<48> time_t;
+// novo
+typedef bit<32> qdepth_t;
 
 header ethernet_t {
     macAddr_t dstAddr;
@@ -53,6 +54,8 @@ header probe_data_t {
     bit<32>   byte_cnt;
     time_t    last_time;
     time_t    cur_time;
+    qdepth_t  qdepth;
+
 }
 
 // Indicates the egress port the switch should send this probe
@@ -138,7 +141,7 @@ parser MyParser(packet_in packet,
 ************   C H E C K S U M    V E R I F I C A T I O N   *************
 *************************************************************************/
 
-control MyVerifyChecksum(inout headers hdr, inout metadata meta) {   
+control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
     apply {  }
 }
 
@@ -154,14 +157,14 @@ control MyIngress(inout headers hdr,
     action drop() {
         mark_to_drop(standard_metadata);
     }
-    
+
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
-    
+
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -174,7 +177,7 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = drop();
     }
-    
+
     apply {
         if (hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
@@ -242,6 +245,8 @@ control MyEgress(inout headers hdr,
             last_time_reg.write((bit<32>)standard_metadata.egress_port, cur_time);
             hdr.probe_data[0].last_time = last_time;
             hdr.probe_data[0].cur_time = cur_time;
+            hdr.probe_data[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
+
         }
     }
 }

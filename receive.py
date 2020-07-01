@@ -14,7 +14,7 @@ def handle_pkt(pkt):
         print ""
         for sw in data_layers:
             utilization = 0 if sw.cur_time == sw.last_time else 8.0*sw.byte_cnt/(sw.cur_time - sw.last_time)
-            print "Switch {} - Port {}: {} Mbps".format(sw.swid, sw.port, utilization)
+            print "Switch {} - Port {}: {} Mbps - deq_qdepth {}".format(sw.swid, sw.port, utilization,sw.deq_qdepth)
 
 def main():
     iface = 'eth0'

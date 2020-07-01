@@ -11,7 +11,8 @@ class ProbeData(Packet):
                    ByteField("port", 0),
                    IntField("byte_cnt", 0),
                    BitField("last_time", 0, 48),
-                   BitField("cur_time", 0, 48)]
+                   BitField("cur_time", 0, 48),
+                   BitField("deq_qdepth", 0, 32)]
 
 class ProbeFwd(Packet):
    fields_desc = [ ByteField("egress_spec", 0)]
@@ -22,4 +23,3 @@ bind_layers(Probe, ProbeData)
 bind_layers(ProbeData, ProbeData, bos=0)
 bind_layers(ProbeData, ProbeFwd, bos=1)
 bind_layers(ProbeFwd, ProbeFwd)
-

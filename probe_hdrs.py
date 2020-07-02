@@ -12,7 +12,10 @@ class ProbeData(Packet):
                    IntField("byte_cnt", 0),
                    BitField("last_time", 0, 48),
                    BitField("cur_time", 0, 48),
-                   BitField("deq_qdepth", 0, 32)]
+                   BitField("queue_length_in", 0, 32),
+                   BitField("queue_length_out", 0, 32),
+                   BitField("queue_in_time", 0, 32),
+                   BitField("queue_out_time", 0, 32)]
 
 class ProbeFwd(Packet):
    fields_desc = [ ByteField("egress_spec", 0)]

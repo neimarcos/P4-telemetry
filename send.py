@@ -3,6 +3,8 @@ import sys
 import time
 from probe_hdrs import *
 
+TIME = 1
+
 def main():
 
     probe_pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
@@ -20,7 +22,7 @@ def main():
     while True:
         try:
             sendp(probe_pkt, iface='eth0')
-            time.sleep(1)
+            time.sleep(PROBE_TIME)
         except KeyboardInterrupt:
             sys.exit()
 

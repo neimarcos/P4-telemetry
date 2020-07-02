@@ -16,8 +16,8 @@ typedef bit<9>  egressSpec_t;
 typedef bit<48> macAddr_t;
 typedef bit<32> ip4Addr_t;
 typedef bit<48> time_t;
-// novo
-typedef bit<32> qdepth_t;
+typedef bit<32> queue_t;
+typedef bit<32> queuetime_t;
 
 header ethernet_t {
     macAddr_t dstAddr;
@@ -54,8 +54,10 @@ header probe_data_t {
     bit<32>   byte_cnt;
     time_t    last_time;
     time_t    cur_time;
-    qdepth_t  qdepth;
-
+    queue_t   in_queue;
+    queue_t   out_queue;
+    queuetime_t queue_in_time;
+    queuetime_t queue_out_time;
 }
 
 // Indicates the egress port the switch should send this probe
@@ -225,28 +227,32 @@ control MyEgress(inout headers hdr,
         // reset the byte count when a probe packet passes through
         new_byte_cnt = (hdr.probe.isValid()) ? 0 : byte_cnt;
         byte_cnt_reg.write((bit<32>)standard_metadata.egress_port, new_byte_cnt);
-
-        if (hdr.probe.isValid()) {
-            // fill out probe fields
-            hdr.probe_data.push_front(1);
-            hdr.probe_data[0].setValid();
-            if (hdr.probe.hop_cnt == 1) {
-                hdr.probe_data[0].bos = 1;
+        //logica funciona somente nesta topologia
+        if (standard_metadata.egress_port != 2){
+          if (hdr.probe.isValid()) {
+              // fill out probe fields
+              hdr.probe_data.push_front(1);
+              hdr.probe_data[0].setValid();
+              if (hdr.probe.hop_cnt == 1) {
+                  hdr.probe_data[0].bos = 1;
+                  }
+                  else {
+                  hdr.probe_data[0].bos = 0;
+                  }
+                  // set switch ID field
+                  swid.apply();
+                  hdr.probe_data[0].port = (bit<8>)standard_metadata.egress_port;
+                  hdr.probe_data[0].byte_cnt = byte_cnt;
+                  // read / update the last_time_reg
+                  last_time_reg.read(last_time, (bit<32>)standard_metadata.egress_port);
+                  last_time_reg.write((bit<32>)standard_metadata.egress_port, cur_time);
+                  hdr.probe_data[0].last_time = last_time;
+                  hdr.probe_data[0].cur_time = cur_time;
+                  hdr.probe_data[0].in_queue = (queue_t)standard_metadata.enq_qdepth;
+                  hdr.probe_data[0].out_queue = (queue_t)standard_metadata.deq_qdepth;
+                  hdr.probe_data[0].queue_in_time = (queuetime_t)standard_metadata.enq_timestamp;
+                  hdr.probe_data[0].queue_out_time = (queuetime_t)standard_metadata.deq_timedelta;
             }
-            else {
-                hdr.probe_data[0].bos = 0;
-            }
-            // set switch ID field
-            swid.apply();
-            hdr.probe_data[0].port = (bit<8>)standard_metadata.egress_port;
-            hdr.probe_data[0].byte_cnt = byte_cnt;
-            // read / update the last_time_reg
-            last_time_reg.read(last_time, (bit<32>)standard_metadata.egress_port);
-            last_time_reg.write((bit<32>)standard_metadata.egress_port, cur_time);
-            hdr.probe_data[0].last_time = last_time;
-            hdr.probe_data[0].cur_time = cur_time;
-            hdr.probe_data[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
-
         }
     }
 }

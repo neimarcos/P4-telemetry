@@ -7,17 +7,39 @@ TIME_PROBE = 1
 
 def main():
 
-    probe_pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
+    probe_pktRLZ = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
+                Probe(hop_cnt=0) / \
+                ProbeFwd(egress_spec=3) / \
+                ProbeFwd(egress_spec=3) / \
+                ProbeFwd(egress_spec=2)
+    probe_pktLJS = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
+                Probe(hop_cnt=0) / \
+                ProbeFwd(egress_spec=4) / \
+                ProbeFwd(egress_spec=3) / \
+                ProbeFwd(egress_spec=2)
+    probe_pktCRR = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
                 Probe(hop_cnt=0) / \
                 ProbeFwd(egress_spec=5) / \
                 ProbeFwd(egress_spec=3) / \
+                ProbeFwd(egress_spec=2)
+    probe_pktERE = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
+                Probe(hop_cnt=0) / \
+                ProbeFwd(egress_spec=6) / \
                 ProbeFwd(egress_spec=3) / \
+                ProbeFwd(egress_spec=2)
+    probe_pktPAS = Ether(dst='ff:ff:ff:ff:ff:ff', src=get_if_hwaddr('eth0')) / \
+                Probe(hop_cnt=0) / \
+                ProbeFwd(egress_spec=7) / \
                 ProbeFwd(egress_spec=3) / \
                 ProbeFwd(egress_spec=2)
 
     while True:
         try:
-            sendp(probe_pkt, iface='eth0')
+            sendp(probe_pktRLZ, iface='eth0')
+            sendp(probe_pktLJS, iface='eth0')
+            sendp(probe_pktCRR, iface='eth0')
+            sendp(probe_pktERE, iface='eth0')
+            sendp(probe_pktPAS, iface='eth0')
             time.sleep(TIME_PROBE)
         except KeyboardInterrupt:
             sys.exit()

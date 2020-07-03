@@ -228,7 +228,7 @@ control MyEgress(inout headers hdr,
         new_byte_cnt = (hdr.probe.isValid()) ? 0 : byte_cnt;
         byte_cnt_reg.write((bit<32>)standard_metadata.egress_port, new_byte_cnt);
         //logica funciona somente nesta topologia
-        if (standard_metadata.egress_port != 2){
+        if (standard_metadata.egress_port != 8){
           if (hdr.probe.isValid()) {
               // fill out probe fields
               hdr.probe_data.push_front(1);

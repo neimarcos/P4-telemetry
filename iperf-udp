@@ -1,0 +1,27 @@
+server_port=5002;
+max_test_time=10;
+num_tests=20;
+max_sleep_time=8;
+max_test_parallel=3;
+max_network=6;
+max_bandwidth=3;
+
+
+iperf -s -u -i 1 -p ${server_port} -D
+
+# Repeat the iperf tests
+for i in `seq 1 ${num_tests}`; do
+	random_sleep=`echo $(( ( RANDOM % ${max_sleep_time} )  + 1 ))`
+	random_test=`echo $(( ( RANDOM % ${max_test_time} )  + 1 ))`
+	random_bandwidth=`echo $(( ( RANDOM % ${max_bandwidth} )  + 1 ))`
+  random_ip=`echo $(( ( RANDOM % ${max_network} )  ))`
+	# Sleep (do nothing)
+	#echo "Sleeping for ${random_sleep} seconds"
+	sleep ${random_sleep}
+
+	# Start an iperf test
+	#echo "Running iperf for ${random_test} seconds"
+	#echo "iperf -c 172.2${random_ip}.20.1 -u -b ${random_bandwidth}m -p ${server_port} -t ${random_test}"
+	iperf -c 172.2${random_ip}.10.1 -u -b ${random_bandwidth}m -p ${server_port} -t ${random_test}
+done
+killall -9 iperf

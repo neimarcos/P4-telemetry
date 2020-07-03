@@ -35,20 +35,23 @@
                            "arp -i eth0 -s 172.25.10.254 08:00:00:00:0B:00"]},
         "h12": {"ip": "172.25.20.1/24", "mac": "08:00:00:00:0C:CC",
                "commands":["route add default gw 172.25.20.254 dev eth0",
-                           "arp -i eth0 -s 172.25.20.254 08:00:00:00:0C:00"]}
+                           "arp -i eth0 -s 172.25.20.254 08:00:00:00:0C:00"]},
+        "h13": {"ip": "172.20.30.1/24", "mac": "08:00:00:00:0D:DD",
+               "commands":["route add default gw 172.20.30.254 dev eth0",
+                           "arp -i eth0 -s 172.20.30.254 08:00:00:00:0D:00"]}
     },
     "switches": {
-        "s1": { "runtime_json" : "pod-topo/s1-runtime.json" },
-        "s2": { "runtime_json" : "pod-topo/s2-runtime.json" },
-        "s3": { "runtime_json" : "pod-topo/s3-runtime.json" },
-        "s4": { "runtime_json" : "pod-topo/s4-runtime.json" },
-        "s5": { "runtime_json" : "pod-topo/s5-runtime.json" },
-        "s6": { "runtime_json" : "pod-topo/s6-runtime.json" }
+        "s1": { "runtime_json" : "topology/s1-runtime.json" },
+        "s2": { "runtime_json" : "topology/s2-runtime.json" },
+        "s3": { "runtime_json" : "topology/s3-runtime.json" },
+        "s4": { "runtime_json" : "topology/s4-runtime.json" },
+        "s5": { "runtime_json" : "topology/s5-runtime.json" },
+        "s6": { "runtime_json" : "topology/s6-runtime.json" }
     },
     "links": [
         ["h1", "s1-p1"], ["h2", "s1-p2"], ["s1-p3", "s3-p3"],
         ["h3", "s2-p1"], ["h4", "s2-p2"], ["s2-p3", "s3-p4"],
-        ["h5", "s3-p1"], ["h6", "s3-p2"],
+        ["h5", "s3-p1"], ["h6", "s3-p2"], ["h13", "s3-p8"],
         ["h7", "s4-p1"], ["h8", "s4-p2"],["s4-p3", "s3-p5"],
         ["h9", "s5-p1"], ["h10", "s5-p2"],["s5-p3", "s3-p6"],
         ["h11", "s6-p1"], ["h12", "s6-p2"],["s6-p3", "s3-p7"]

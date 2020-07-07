@@ -11,14 +11,14 @@ def expand(x):
 def handle_pkt(pkt):
     if ProbeData in pkt:
         data_layers = [l for l in expand(pkt) if l.name=='ProbeData']
-        #pkt.show2()
-        #    hexdump(pkt)
-        #sys.stdout.flush()
+        pkt.show2()
+            hexdump(pkt)
+        sys.stdout.flush()
     #    print ""
-        for sw in data_layers:
-             utilization = 0 if sw.cur_time == sw.last_time else 8.0*sw.byte_cnt/(sw.cur_time - sw.last_time)
-             tempo = 0 if sw.cur_time == sw.last_time else sw.cur_time - sw.last_time
-             print "Switch {} - Port {}: {} Mbps - ingress queue {} - ingress queue time {} - egresse queue {} - egresse queue time {} - probe intertime - {}".format(sw.swid, sw.port, utilization,sw.queue_length_in,sw.queue_in_time,sw.queue_length_out,sw.queue_out_time,tempo)
+    #    for sw in data_layers:
+    #         utilization = 0 if sw.cur_time == sw.last_time else 8.0*sw.byte_cnt/(sw.cur_time - sw.last_time)
+    #         tempo = 0 if sw.cur_time == sw.last_time else sw.cur_time - sw.last_time
+    #         print "Switch {} - Port {}: {} Mbps - ingress queue {} - ingress queue time {} - egresse queue {} - egresse queue time {} - probe intertime - {}".format(sw.swid, sw.port, utilization,sw.queue_length_in,sw.queue_in_time,sw.queue_length_out,sw.queue_out_time,tempo)
             #print "{};{};{};{};{};{};{};{}".format(sw.swid, sw.port, utilization,sw.queue_length_in,sw.queue_in_time,sw.queue_length_out,sw.queue_out_time,tempo)
 
 def main():

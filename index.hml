@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Graficos</title>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="5">
+  </head>
+  <body>
+    <img src="SW1-Queue.jpg" title="Queue" />
+    <img src="SW1-Queue-time.jpg" title="Queue" />
+  </body>
+</html>
